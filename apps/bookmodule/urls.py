@@ -33,4 +33,7 @@ urlpatterns = [
     path('html5/listing/', views.listing),
     path('html5/tables/', views.tables),
     path('search/', views.search),
+    path('simple/query', views.simple_query),
+    path('lookup/query/', views.lookup_query),
 ]
+

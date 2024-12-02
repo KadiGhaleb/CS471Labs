@@ -49,17 +49,8 @@
 
 {% block content %}
 <h1>Book list</h1>
-<table>
-    <caption>These are the book list avaliable based on your request</caption>
-    <tr>
-        <th>Title</th>
-        <th>Author</th>
-    <tr>
-    {% for b in books %}
-        <tr>
-            <td>{{b.title}}</td>
-            <td>{{b.author}}</td>
-        </tr>
+{% for obj in books %}    
+ID: {{obj.id}}, Title: {{obj.title}}     
+<hr>
     {% endfor %}
- </table>
 {% endblock content %}

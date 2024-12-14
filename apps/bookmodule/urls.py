@@ -35,5 +35,10 @@ urlpatterns = [
     path('search/', views.search),
     path('simple/query', views.simple_query),
     path('lookup/query/', views.lookup_query),
+    path('lab8/task1/', views.task1),
+    path('lab8/task2/', views.task2),
+    path('lab8/task3/', views.task3),
+    path('lab8/task4/', views.task4),
+    path('lab8/task5/', views.task5),
 ]
 

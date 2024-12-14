@@ -2,6 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Book
 
+from django.db.models import Q
+from django.db.models import Count, Min, Max, Sum, Avg
+
+
 # def index(request):
 #     name = request.GET.get("name") or "world!" 
 #     return render(request, "bookmodule/index.html", {"name": name})
@@ -48,7 +52,8 @@ def search(request):
     if request.method == "POST":         
         string = request.POST.get('keyword').lower()         
         isTitle = request.POST.get('option1')         
-        isAuthor = request.POST.get('option2')         
+        isAuthor = request.POST.get('option2')      
+           
         # now filter         
         books = __getBooksList()         
         newBooks = []         
@@ -80,3 +85,29 @@ def lookup_query(request):
         return render(request, 'bookmodule/bookList.html', {'books':mybooks})     
     else:         
         return render(request, 'bookmodule/index.html')
+
+def task1(request):
+    books = Book.objects.filter(Q(price__lte = 50))
+    return render(request, 'bookmodule/task1.html', {'books': books})
+
+def task2(request):
+    books = Book.objects.filter(Q(edition__gt = 2) & (Q(title__icontains = 'qu') | Q(author__icontains = 'qu')))
+    return render(request, 'bookmodule/task2.html', {'books': books})
+
+def task3(request):
+    books = Book.objects.filter(~Q(edition__gt = 2) & (~Q(title__icontains = 'qu') | ~Q(author__icontains = 'qu')))
+    return render(request, 'bookmodule/task3.html', {'books': books})
+
+def task4(request):
+    books = Book.objects.order_by('title')
+    return render(request, 'bookmodule/task4.html', {'books': books})
+
+def task5(request):
+    query = Book.objects.aggregate(
+        count=Count('id'),
+        total_price=Sum('price'),
+        average_price=Avg('price'),
+        min_price=Min('price'),
+        max_price=Max('price')
+    )
+    return render(request, 'bookmodule/task5.html', {'query': query})

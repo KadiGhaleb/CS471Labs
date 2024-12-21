@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Book
-
+from .models import *
 from django.db.models import Q
 from django.db.models import Count, Min, Max, Sum, Avg
 
-from .forms import BookForm
+from .forms import *
+
 
 # def index(request):
 #     name = request.GET.get("name") or "world!" 
@@ -168,3 +168,140 @@ def edit_bookforms(request, id):
     else:
         form = BookForm(instance=book)
     return render(request, 'bookmodule/edit_bookforms.html', {'form': form})
+
+
+#####################################
+
+def list_students(request):
+    students = Student.objects.all()
+    return render(request, 'bookmodule/list_students.html', {'students': students})
+
+# # Add a new student
+# def add_student(request):
+#     if request.method == 'POST':
+#         student_form = StudentForm(request.POST)
+#         address_form = AddressForm(request.POST)
+#         if student_form.is_valid() and address_form.is_valid():
+#             address = address_form.save()
+#             student = student_form.save(commit=False)
+#             student.address = address
+#             student.save()
+#             return redirect('list_students')
+#     else:
+#         student_form = StudentForm()
+#         address_form = AddressForm()
+#     return render(request, 'bookmodule/add_student.html', {'student_form': student_form, 'address_form': address_form})
+
+# # Edit a student
+# def edit_student(request, student_id):
+#     student = get_object_or_404(Student, id=student_id)
+#     address = student.address
+#     if request.method == 'POST':
+#         student_form = StudentForm(request.POST, instance=student)
+#         address_form = AddressForm(request.POST, instance=address)
+#         if student_form.is_valid() and address_form.is_valid():
+#             student_form.save()
+#             address_form.save()
+#             return redirect('list_students')
+#     else:
+#         student_form = StudentForm(instance=student)
+#         address_form = AddressForm(instance=address)
+#     return render(request, 'bookmodule/edit_student.html', {'student_form': student_form, 'address_form': address_form})
+
+# Delete a student
+def delete_student(request, student_id):
+    student = get_object_or_404(Student, id=student_id)
+    student.delete()
+    return redirect('list_students')
+
+# Add an address
+def add_address(request):
+    if request.method == 'POST':
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list_students')
+    else:
+        form = AddressForm()
+    return render(request, 'bookmodule/add_address.html', {'form': form})
+
+
+###############################
+
+# List Students2 with their addresses
+def list_students2(request):
+    students = Student2.objects.prefetch_related('addresses').all()
+    return render(request, 'students2/list_students2.html', {'students': students})
+
+# Add a new student2 with addresses
+def add_student2(request):
+    if request.method == 'POST':
+        student_form = Student2Form(request.POST)
+        address_form = Address2Form(request.POST)
+        if student_form.is_valid() and address_form.is_valid():
+            # Save the new address first
+            address = address_form.save()
+            # Save the student and associate the address
+            student = student_form.save()
+            student.addresses.add(address)  # Add the address to the many-to-many relationship
+            return redirect('list_students2')
+    else:
+        student_form = Student2Form()
+        address_form = Address2Form()
+    return render(request, 'students2/add_student2.html', {
+        'student_form': student_form,
+        'address_form': address_form
+    })
+
+# Update student2 and addresses
+def update_student2(request, id):
+    student = get_object_or_404(Student2, id=id)
+    if request.method == 'POST':
+        student_form = Student2Form(request.POST, instance=student)
+        if student_form.is_valid():
+            student_form.save()
+            return redirect('list_students2')
+    else:
+        student_form = Student2Form(instance=student)
+    return render(request, 'students2/update_student2.html', {'student_form': student_form})
+
+# Delete student2
+def delete_student2(request, id):
+    student = get_object_or_404(Student2, id=id)
+    student.delete()
+    return redirect('list_students2')
+def add_student(request):
+    if request.method == 'POST':
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('list_students')
+    else:
+        form = StudentForm()
+    return render(request, 'usermodule/add_student.html', {'form': form})
+
+######################## Lab 10 
+
+def edit_student(request, id):
+    student = get_object_or_404(Student, id=id)
+    if request.method == 'POST':
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return redirect('list_students')
+    else:
+        form = StudentForm(instance=student)
+    return render(request, 'usermodule/edit_student.html', {'form': form})
+
+
+################## Lab 10 Task 3
+
+def upload_image(request):
+    if request.method == 'POST':
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('upload_image')
+    else:
+        form = ImageForm()
+    return render(request, 'bookmodule/upload_image.html', {'form': form})

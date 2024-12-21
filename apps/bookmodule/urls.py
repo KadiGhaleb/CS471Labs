@@ -46,6 +46,17 @@ urlpatterns = [
     path('lab9_part1/deletebook/<int:id>/', views.delete_book, name='delete_book'),
     path('lab9_part2/addbookforms/', views.add_bookforms, name='add_book2'),
     path('lab9_part2/editbookforms/<int:id>/', views.edit_bookforms, name='edit_book2'),
+    path('list/', views.list_students, name='list_students'),
+    path('add/', views.add_student, name='add_student'),
+    path('edit/<int:student_id>/', views.edit_student, name='edit_student'),
+    path('delete/<int:student_id>/', views.delete_student, name='delete_student'),
+    path('add_address/', views.add_address, name='add_address'),
+    #  path('students2/', views.list_students2, name='list_students2'),
+    # path('students2/add/', views.add_student2, name='add_student2'),
+    # path('students2/update/<int:id>/', views.update_student2, name='update_student2'),
+    # path('students2/delete/<int:id>/', views.delete_student2, name='delete_student2'),
+    path('upload/', views.upload_image, name='upload_image'),
+
 
 ]
 
